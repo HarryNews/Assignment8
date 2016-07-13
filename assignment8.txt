@@ -1,0 +1,48 @@
+```C
+1 #include <stdio.h>
+2 #include <string.h>
+3 #include <stdlib.h>
+4
+5 int main(int argc, char **argv)
+6 {
+7   if (argc != 3) {
+8     printf("usage: %s <arg1> <arg2>\n", argv[0]);
+9     return 1;
+10  }
+11
+12  char *a = *++argv; /* gets first argument */
+13  char *b = *++argv; /* gets second argument */
+14  char c[2] = { 0, 0 };
+15  char *p;
+16  char *q;
+17
+18  for (p = a; *p; p++) { /* loop until the end of the first arg */
+19     if (’a’ <= *p && *p <= ’z’) /* If the first arg is a lowercase letter */
+20        *c = *p + ’A’ - ’a’; /* store the capitalized version in c[0] */
+21     else
+22        *c = *p; /* otherwise store it in c[0] */
+23    printf("%s", c); /* print out c[0] with no newline*/
+24  }
+/* lines 18 to 24 print out the first arg capitalized */
+25
+26  p = (char *)malloc(strlen(a) + strlen(b) + 1); /* allocate memory for an array big enough to store first and second arg and \0 */
+    /* also, reassigns p */
+27  strcpy(p, a); /* copies a to P */
+28  q = p + strlen(a); /* moves q to the \0 of the first arg */
+29  while ((*q++ = *b++) != 0)
+30  ; /* copies the second arg to after the first arg in p */
+31  printf("%s\n", p); /* prints the first arg followed by the second arg (no space) and then a newline */
+32  p = NULL; /* reassigns P AGAIN */
+33  return 0;
+34 }
+```
+line 23 outputs
+Line 31 outputs
+
+line 26 leaks memory
+line 32 leaks memory
+
+1) ABCabc123
+2) 7 (because the pointer will be deallocated, but the memory it points to will not be)
+3) NONE
+4) 32  free(p);
